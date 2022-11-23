@@ -44,3 +44,16 @@ func Poll(tb testing.TB, d time.Duration, want any, have func() any) {
 
 	MustEqual(tb, have(), want)
 }
+
+// NoAllocs fails if f allocates. No-op when compiled with race detector.
+func NoAllocs(tb testing.TB, f func()) {
+	if Race {
+		tb.Skip("skip while running with -race")
+		return
+	}
+
+	// 10 runs should be enough
+	if a := testing.AllocsPerRun(10, f); a > 0 {
+		tb.Errorf("allocations detected: %d", int(a))
+	}
+}

@@ -32,3 +32,9 @@ func (tt *TT) Poll(d time.Duration, want any, have func() any) {
 	tt.tb.Helper()
 	Poll(tt.tb, d, want, have)
 }
+
+// NoAllocs fails if f allocates.
+func (tt *TT) NoAllocs(f func()) {
+	tt.tb.Helper()
+	NoAllocs(tt.tb, f)
+}
